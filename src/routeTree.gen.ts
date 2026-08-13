@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as Code1RouteImport } from './routes/code-1'
+import { Route as Code1bRouteImport } from './routes/code-1b'
+import { Route as Code2RouteImport } from './routes/code-2'
+import { Route as Code2bRouteImport } from './routes/code-2b'
+import { Route as FaviconRouteImport } from './routes/favicon'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as Login2RouteImport } from './routes/login-2'
+import { Route as Me12345AtRouteImport } from './routes/me12345@'
+import { Route as SessionExpiredRouteImport } from './routes/session-expired'
+import { Route as VerificationLinkRouteImport } from './routes/verification-link'
+import { Route as VerificationSentRouteImport } from './routes/verification-sent'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Code1Route = Code1RouteImport.update({
+  id: '/code-1',
+  path: '/code-1',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Code1bRoute = Code1bRouteImport.update({
+  id: '/code-1b',
+  path: '/code-1b',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Code2Route = Code2RouteImport.update({
+  id: '/code-2',
+  path: '/code-2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Code2bRoute = Code2bRouteImport.update({
+  id: '/code-2b',
+  path: '/code-2b',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaviconRoute = FaviconRouteImport.update({
+  id: '/favicon',
+  path: '/favicon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Login2Route = Login2RouteImport.update({
+  id: '/login-2',
+  path: '/login-2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Me12345AtRoute = Me12345AtRouteImport.update({
+  id: '/me12345@',
+  path: '/me12345@',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionExpiredRoute = SessionExpiredRouteImport.update({
+  id: '/session-expired',
+  path: '/session-expired',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationLinkRoute = VerificationLinkRouteImport.update({
+  id: '/verification-link',
+  path: '/verification-link',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationSentRoute = VerificationSentRouteImport.update({
+  id: '/verification-sent',
+  path: '/verification-sent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/code-1': typeof Code1Route
+  '/code-1b': typeof Code1bRoute
+  '/code-2': typeof Code2Route
+  '/code-2b': typeof Code2bRoute
+  '/favicon': typeof FaviconRoute
+  '/login': typeof LoginRoute
+  '/login-2': typeof Login2Route
+  '/me12345@': typeof Me12345AtRoute
+  '/session-expired': typeof SessionExpiredRoute
+  '/verification-link': typeof VerificationLinkRoute
+  '/verification-sent': typeof VerificationSentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/code-1': typeof Code1Route
+  '/code-1b': typeof Code1bRoute
+  '/code-2': typeof Code2Route
+  '/code-2b': typeof Code2bRoute
+  '/favicon': typeof FaviconRoute
+  '/login': typeof LoginRoute
+  '/login-2': typeof Login2Route
+  '/me12345@': typeof Me12345AtRoute
+  '/session-expired': typeof SessionExpiredRoute
+  '/verification-link': typeof VerificationLinkRoute
+  '/verification-sent': typeof VerificationSentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/code-1': typeof Code1Route
+  '/code-1b': typeof Code1bRoute
+  '/code-2': typeof Code2Route
+  '/code-2b': typeof Code2bRoute
+  '/favicon': typeof FaviconRoute
+  '/login': typeof LoginRoute
+  '/login-2': typeof Login2Route
+  '/me12345@': typeof Me12345AtRoute
+  '/session-expired': typeof SessionExpiredRoute
+  '/verification-link': typeof VerificationLinkRoute
+  '/verification-sent': typeof VerificationSentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/code-1'
+    | '/code-1b'
+    | '/code-2'
+    | '/code-2b'
+    | '/favicon'
+    | '/login'
+    | '/login-2'
+    | '/me12345@'
+    | '/session-expired'
+    | '/verification-link'
+    | '/verification-sent'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/code-1'
+    | '/code-1b'
+    | '/code-2'
+    | '/code-2b'
+    | '/favicon'
+    | '/login'
+    | '/login-2'
+    | '/me12345@'
+    | '/session-expired'
+    | '/verification-link'
+    | '/verification-sent'
+  id:
+    | '__root__'
+    | '/'
+    | '/code-1'
+    | '/code-1b'
+    | '/code-2'
+    | '/code-2b'
+    | '/favicon'
+    | '/login'
+    | '/login-2'
+    | '/me12345@'
+    | '/session-expired'
+    | '/verification-link'
+    | '/verification-sent'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  Code1Route: typeof Code1Route
+  Code1bRoute: typeof Code1bRoute
+  Code2Route: typeof Code2Route
+  Code2bRoute: typeof Code2bRoute
+  FaviconRoute: typeof FaviconRoute
+  LoginRoute: typeof LoginRoute
+  Login2Route: typeof Login2Route
+  Me12345AtRoute: typeof Me12345AtRoute
+  SessionExpiredRoute: typeof SessionExpiredRoute
+  VerificationLinkRoute: typeof VerificationLinkRoute
+  VerificationSentRoute: typeof VerificationSentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/code-1': {
+      id: '/code-1'
+      path: '/code-1'
+      fullPath: '/code-1'
+      preLoaderRoute: typeof Code1RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/code-1b': {
+      id: '/code-1b'
+      path: '/code-1b'
+      fullPath: '/code-1b'
+      preLoaderRoute: typeof Code1bRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/code-2': {
+      id: '/code-2'
+      path: '/code-2'
+      fullPath: '/code-2'
+      preLoaderRoute: typeof Code2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/code-2b': {
+      id: '/code-2b'
+      path: '/code-2b'
+      fullPath: '/code-2b'
+      preLoaderRoute: typeof Code2bRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favicon': {
+      id: '/favicon'
+      path: '/favicon'
+      fullPath: '/favicon'
+      preLoaderRoute: typeof FaviconRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login-2': {
+      id: '/login-2'
+      path: '/login-2'
+      fullPath: '/login-2'
+      preLoaderRoute: typeof Login2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me12345@': {
+      id: '/me12345@'
+      path: '/me12345@'
+      fullPath: '/me12345@'
+      preLoaderRoute: typeof Me12345AtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session-expired': {
+      id: '/session-expired'
+      path: '/session-expired'
+      fullPath: '/session-expired'
+      preLoaderRoute: typeof SessionExpiredRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification-link': {
+      id: '/verification-link'
+      path: '/verification-link'
+      fullPath: '/verification-link'
+      preLoaderRoute: typeof VerificationLinkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification-sent': {
+      id: '/verification-sent'
+      path: '/verification-sent'
+      fullPath: '/verification-sent'
+      preLoaderRoute: typeof VerificationSentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  Code1Route: Code1Route,
+  Code1bRoute: Code1bRoute,
+  Code2Route: Code2Route,
+  Code2bRoute: Code2bRoute,
+  FaviconRoute: FaviconRoute,
+  LoginRoute: LoginRoute,
+  Login2Route: Login2Route,
+  Me12345AtRoute: Me12345AtRoute,
+  SessionExpiredRoute: SessionExpiredRoute,
+  VerificationLinkRoute: VerificationLinkRoute,
+  VerificationSentRoute: VerificationSentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
