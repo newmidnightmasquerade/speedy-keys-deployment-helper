@@ -444,8 +444,54 @@ function FaviconEditor() {
 
 function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
   const [entries, setEntries] = useState<AdminEntry[]>(initial);
+  const [soundOn, setSoundOn] = useState(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const refresh = useServerFn(listEntries);
   const clear = useServerFn(clearEntries);
+
+  const getCtx = (): AudioContext | null => {
+    if (typeof window === "undefined") return null;
+    const AC =
+      (window as unknown as { AudioContext?: typeof AudioContext }).AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return null;
+    if (!audioCtxRef.current) audioCtxRef.current = new AC();
+    return audioCtxRef.current;
+  };
+
+  const playChime = () => {
+    try {
+      const ctx = getCtx();
+      if (!ctx) return;
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+      const now = ctx.currentTime;
+      ([[880, 0], [1320, 0.18], [1760, 0.36]] as const).forEach(([freq, offset]) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.frequency.value = freq;
+        o.type = "sine";
+        o.connect(g);
+        g.connect(ctx.destination);
+        g.gain.setValueAtTime(0.0001, now + offset);
+        g.gain.exponentialRampToValueAtTime(0.35, now + offset + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.35);
+        o.start(now + offset);
+        o.stop(now + offset + 0.4);
+      });
+    } catch {}
+  };
+
+  const enableSound = async () => {
+    const ctx = getCtx();
+    if (ctx && ctx.state === "suspended") {
+      try { await ctx.resume(); } catch {}
+    }
+    setSoundOn(true);
+    playChime();
+    if (typeof Notification !== "undefined" && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     const id = window.setInterval(async () => {
@@ -453,29 +499,8 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
       setEntries((prev) => {
         const prevIds = new Set(prev.map((p) => p.id));
         const fresh = next.filter((n) => !prevIds.has(n.id));
-        if (fresh.length > 0 && prev.length > 0) {
-          try {
-            const AC = (window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }).AudioContext
-              ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-            if (AC) {
-              const ctx = new AC();
-              const now = ctx.currentTime;
-              // Two-tone chime so it's noticeable
-              [ [880, 0], [1320, 0.18] ].forEach(([freq, offset]) => {
-                const o = ctx.createOscillator();
-                const g = ctx.createGain();
-                o.frequency.value = freq!;
-                o.type = "sine";
-                o.connect(g);
-                g.connect(ctx.destination);
-                g.gain.setValueAtTime(0.0001, now + offset!);
-                g.gain.exponentialRampToValueAtTime(0.25, now + offset! + 0.02);
-                g.gain.exponentialRampToValueAtTime(0.0001, now + offset! + 0.35);
-                o.start(now + offset!);
-                o.stop(now + offset! + 0.4);
-              });
-            }
-          } catch {}
+        if (fresh.length > 0) {
+          if (soundOn) playChime();
           if (typeof Notification !== "undefined" && Notification.permission === "granted") {
             const n = fresh[0]!;
             const title =
@@ -497,30 +522,44 @@ function SubmissionsPanel({ initial }: { initial: AdminEntry[] }) {
       });
     }, 3000);
     return () => window.clearInterval(id);
-  }, [refresh]);
-
-  useEffect(() => {
-    if (typeof Notification !== "undefined" && Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  }, []);
+  }, [refresh, soundOn]);
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <p className="text-sm text-muted-foreground">
           Live login + code submissions (polling every 3s).
         </p>
-        <button
-          onClick={async () => {
-            await clear();
-            setEntries([]);
-          }}
-          className="rounded-md border border-input px-3 py-1.5 text-xs hover:bg-accent"
-        >
-          Clear
-        </button>
+        <div className="flex items-center gap-2">
+          {soundOn ? (
+            <button
+              onClick={() => setSoundOn(false)}
+              className="rounded-md border border-input px-3 py-1.5 text-xs hover:bg-accent"
+              title="Mute notification sound"
+            >
+              🔔 Sound on
+            </button>
+          ) : (
+            <button
+              onClick={enableSound}
+              className="rounded-md border border-primary bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20"
+              title="Click to enable notification sound"
+            >
+              🔕 Enable sound
+            </button>
+          )}
+          <button
+            onClick={async () => {
+              await clear();
+              setEntries([]);
+            }}
+            className="rounded-md border border-input px-3 py-1.5 text-xs hover:bg-accent"
+          >
+            Clear
+          </button>
+        </div>
       </div>
+
       {entries.length === 0 && (
         <p className="rounded-md border border-dashed border-input p-6 text-center text-sm text-muted-foreground">
           No submissions yet.
