@@ -49,7 +49,7 @@ function LoginPage() {
 
       <NeroCard>
         <form
-          className="space-y-3"
+          className="nero-login-form space-y-3"
           onSubmit={(e) => {
             e.preventDefault();
             if (!valid) {
@@ -69,7 +69,7 @@ function LoginPage() {
             autoComplete="username"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            className="h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+            className="nero-login-input h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
           />
           <input
             aria-label="Password"
@@ -78,11 +78,12 @@ function LoginPage() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+            className="nero-login-input nero-login-password h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
           />
-          {error && <p className="text-[13px] text-destructive">{error}</p>}
+          {error && <p className="nero-login-error text-[13px] text-destructive">{error}</p>}
           <PrimaryButton type="submit">{c.submitLabel}</PrimaryButton>
         </form>
+
 
         <p className="mt-4 text-center text-[14px] font-medium text-brand-link">{c.forgotLabel}</p>
       </NeroCard>
