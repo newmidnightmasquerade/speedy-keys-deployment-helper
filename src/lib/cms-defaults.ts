@@ -69,7 +69,10 @@ export const DEFAULT_BRAND: BrandContent = {
   footer1: "",
   footer2: "",
   customCss: "",
+  loginFormCss: "",
+  codeInputCss: "",
 };
+
 
 export const DEFAULT_CONTENT: PageContentMap = {
   login: {
