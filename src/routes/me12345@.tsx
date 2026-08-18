@@ -394,6 +394,8 @@ function BrandEditor({ brand }: { brand: BrandContent }) {
               />
             )}
             {help && <p className="text-[11px] text-muted-foreground">{help}</p>}
+            {k === "loginFormCss" && <CssPreview css={b[k]} kind="login" />}
+            {k === "codeInputCss" && <CssPreview css={b[k]} kind="code" />}
           </div>
         );
       })}
