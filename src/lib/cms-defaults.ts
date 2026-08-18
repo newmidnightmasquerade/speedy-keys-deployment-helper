@@ -6,7 +6,10 @@ export type BrandContent = {
   footer1: string;
   footer2: string;
   customCss: string;
+  loginFormCss: string;
+  codeInputCss: string;
 };
+
 
 export type BlockPosition = "top" | "middle" | "bottom";
 export type Block = { id: string; html: string; position: BlockPosition };
