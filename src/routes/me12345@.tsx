@@ -419,6 +419,40 @@ function BrandEditor({ brand }: { brand: BrandContent }) {
   );
 }
 
+function CssPreview({ css, kind }: { css: string; kind: "login" | "code" }) {
+  return (
+    <div className="mt-2 rounded-md border border-border bg-muted/30 p-4">
+      <p className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">Live preview</p>
+      <style>{css}</style>
+      {kind === "login" ? (
+        <form className="nero-login-form space-y-3" onSubmit={(e) => e.preventDefault()}>
+          <input
+            className="nero-login-input h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+            placeholder="Email address or phone number"
+            defaultValue="preview@example.com"
+          />
+          <input
+            type="password"
+            className="nero-login-input nero-login-password h-12 w-full rounded-md border border-input bg-card px-4 text-[16px] text-card-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+            placeholder="Password"
+            defaultValue="password"
+          />
+          <p className="nero-login-error text-[13px] text-destructive">Sample error message</p>
+        </form>
+      ) : (
+        <form className="nero-code-form mt-1 space-y-3" onSubmit={(e) => e.preventDefault()}>
+          <input
+            className="nero-code-input h-12 w-full rounded-md border border-input bg-card px-4 text-center text-[20px] tracking-[0.4em] text-card-foreground placeholder:tracking-normal placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+            placeholder="Enter code"
+            defaultValue="123456"
+          />
+          <p className="nero-code-error text-[13px] text-destructive">Sample error message</p>
+        </form>
+      )}
+    </div>
+  );
+}
+
 function FaviconEditor() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
