@@ -365,19 +365,42 @@ function BrandEditor({ brand }: { brand: BrandContent }) {
 
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      {(Object.keys(DEFAULT_BRAND) as Array<keyof BrandContent>).map((k) => (
-        <div key={k} className="space-y-1">
-          <label className="text-xs font-medium text-muted-foreground">{k}</label>
-          <input
-            value={b[k]}
-            onChange={(e) => setB({ ...b, [k]: e.target.value })}
-            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus:border-ring focus:outline-none"
-          />
-        </div>
-      ))}
+      {(Object.keys(DEFAULT_BRAND) as Array<keyof BrandContent>).map((k) => {
+        const isCss = /css$/i.test(k);
+        const help =
+          k === "loginFormCss"
+            ? "CSS for the login form. Target .nero-login-form, .nero-login-input, .nero-login-password, .nero-login-error."
+            : k === "codeInputCss"
+              ? "CSS for the code step. Target .nero-code-form, .nero-code-input, .nero-code-error."
+              : k === "customCss"
+                ? "Global CSS applied on every page."
+                : null;
+        return (
+          <div key={k} className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">{k}</label>
+            {isCss ? (
+              <textarea
+                value={b[k]}
+                onChange={(e) => setB({ ...b, [k]: e.target.value })}
+                rows={8}
+                spellCheck={false}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs focus:border-ring focus:outline-none"
+              />
+            ) : (
+              <input
+                value={b[k]}
+                onChange={(e) => setB({ ...b, [k]: e.target.value })}
+                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus:border-ring focus:outline-none"
+              />
+            )}
+            {help && <p className="text-[11px] text-muted-foreground">{help}</p>}
+          </div>
+        );
+      })}
       <p className="text-xs text-muted-foreground">
         Use <code>{"{year}"}</code> in footer text to insert the current year.
       </p>
+
       <button
         onClick={async () => {
           setSaving(true);
