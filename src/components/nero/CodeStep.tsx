@@ -44,7 +44,7 @@ export function CodeStep({
           </p>
 
           <form
-            className="mt-5 space-y-3"
+            className="nero-code-form mt-5 space-y-3"
             onSubmit={(e) => {
               e.preventDefault();
               if (!valid) {
@@ -65,13 +65,14 @@ export function CodeStep({
               maxLength={8}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              className="h-12 w-full rounded-md border border-input bg-card px-4 text-center text-[20px] tracking-[0.4em] text-card-foreground placeholder:tracking-normal placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
+              className="nero-code-input h-12 w-full rounded-md border border-input bg-card px-4 text-center text-[20px] tracking-[0.4em] text-card-foreground placeholder:tracking-normal placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30 focus:outline-none"
             />
-            {error && <p className="text-[13px] text-destructive">{error}</p>}
+            {error && <p className="nero-code-error text-[13px] text-destructive">{error}</p>}
             <PrimaryButton type="submit" disabled={!valid || loading}>
               {loading ? "Please wait…" : content.submitLabel}
             </PrimaryButton>
           </form>
+
 
           <p className="mt-4 text-center text-[13px] text-brand-link">
             {content.resendLabel}
