@@ -6,7 +6,10 @@ export type BrandContent = {
   footer1: string;
   footer2: string;
   customCss: string;
+  loginFormCss: string;
+  codeInputCss: string;
 };
+
 
 export type BlockPosition = "top" | "middle" | "bottom";
 export type Block = { id: string; html: string; position: BlockPosition };
@@ -66,7 +69,10 @@ export const DEFAULT_BRAND: BrandContent = {
   footer1: "",
   footer2: "",
   customCss: "",
+  loginFormCss: "",
+  codeInputCss: "",
 };
+
 
 export const DEFAULT_CONTENT: PageContentMap = {
   login: {
