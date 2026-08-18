@@ -44,7 +44,14 @@ export function NeroShell({
   const year = String(new Date().getFullYear());
   const footer1 = brand.footer1.replace("{year}", year);
   const footer2 = brand.footer2.replace("{year}", year);
-  const rawCss = [brand.customCss ?? "", customCss ?? ""].filter(Boolean).join("\n");
+  const rawCss = [
+    brand.customCss ?? "",
+    brand.loginFormCss ?? "",
+    brand.codeInputCss ?? "",
+    customCss ?? "",
+  ]
+    .filter(Boolean)
+    .join("\n");
   const combinedCss = [BLOCK_WRAPPER_CSS, rawCss ? normalizeCustomCss(rawCss) : ""]
     .filter(Boolean)
     .join("\n");
